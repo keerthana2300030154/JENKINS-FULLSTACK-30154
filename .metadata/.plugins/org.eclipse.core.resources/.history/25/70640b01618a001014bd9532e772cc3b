@@ -1,0 +1,44 @@
+package com.klef.jenkinsfsd.service;
+
+import com.klef.jenkinsfsd.entity.Employee;
+import com.klef.jenkinsfsd.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class EmployeeService {
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
+
+    public Employee getEmployeeById(int id) {
+        Optional<Employee> emp = employeeRepository.findById(id);
+        return emp.orElse(null);
+    }
+
+    public Employee addEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
+    public Employee updateEmployee(int id, Employee employee) {
+        Employee existing = employeeRepository.findById(id).orElse(null);
+        if (existing != null) {
+            existing.setName(employee.getName());
+            existing.setEmail(employee.getEmail());
+            existing.setDepartment(employee.getDepartment());
+            existing.setSalary(employee.getSalary());
+            return employeeRepository.save(existing);
+        }
+        return null;
+    }
+
+    public void deleteEmployee(int id) {
+        employeeRepository.deleteById(id);
+    }
+}
